@@ -10,9 +10,22 @@ image:
     requests:
       cpu: 200m
       memory: 300Mi
-livenessProbe:
-  initialDelaySeconds: 3000
-  periodSeconds: 1000
+  readinessProbe: {}
+  # Example (replace readinessProbe: {} with the following):
+  # readinessProbe:
+  #   httpGet:
+  #     path: /ready
+  #     port: 3000
+  #   initialDelaySeconds: 3
+  #   periodSeconds: 5
+  livenessProbe: {}
+  # Example (replace livenessProbe: {} with the following)::
+  # livenessProbe:
+  #   httpGet:
+  #     path: /live
+  #     port: 3000
+  #   initialDelaySeconds: 40
+  #   periodSeconds: 10  
 service:
   name: Node
   type: NodePort
@@ -36,5 +49,3 @@ base:
 istio:
   enabled: false
   weight: 100
-prometheus:
-  enabled: false

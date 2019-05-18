@@ -22,12 +22,6 @@ spec:
       - name: "{{  .Chart.Name  }}"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: {{ .Values.service.servicePort }}
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
-          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
         ports:
         - containerPort: {{ .Values.service.servicePort}}
         resources:
@@ -37,3 +31,11 @@ spec:
         env:
           - name: PORT
             value : "{{ .Values.service.servicePort }}"
+        {{- if .Values.image.livenessProbe }}
+        livenessProbe:
+{{ toYaml .Values.image.livenessProbe | indent 10 }}
+        {{- end }}
+        {{- if .Values.image.readinessProbe }}
+        readinessProbe:
+{{ toYaml .Values.image.readinessProbe | indent 10 }}
+        {{- end }}
