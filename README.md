@@ -65,14 +65,23 @@ The following table lists the configurable parameters of the template Helm chart
 | `image.repository`         | image repository                                | `<namespace>/nodeserver`                                 |
 | `image.tag`                | Image tag                                       | `latest`                                                    |
 | `image.pullPolicy`         | Image pull policy                               | `Always`                                                   |
-| `livenessProbe.initialDelaySeconds`   | How long to wait before beginning the checks our pod(s) are up |   30                             |
-| `livenessProbe.periodSeconds`         | The interval at which we'll check if a pod is running OK before being restarted     | 10          |
+| `livenessProbe`   | Confuration for any liveness probe provided |   YAML object of liveness probe. See [Liveness and Readiness Probes](#liveness-and-readiness-probes)                            |
+| `readinessProbe`         | Confuration provided for any liveness probe provided      | YAML object of readiness probe. See [Liveness and Readiness Probes](#liveness-and-readiness-probes)         |
 | `service.name`             | Kubernetes service name                                | `Node`                                                     |
 | `service.type`             | Kubernetes service type exposing port                  | `NodePort`                                                 |
 | `service.port`             | TCP Port for this service                       | 3000                                                       |
 | `resources.limits.memory`  | Memory resource limits                          | `128m`                                                     |
 | `resources.limits.cpu`     | CPU resource limits                             | `100m`                                                     |
 
+#### Liveness and Readiness Probes
+
+With the default configuration, no liveness or readiness is enabled. This means that the container is considered healthy as long as its main process is running, otherwise it's considered a failure.
+
+Optionally, you add configurations for readiness and liveness probes by configuring `image.readinessProbe` and `image.livenessProbe` parameters, respectively. Example configuration is provided in the `values.yaml` file.
+
+The `initialDelaySeconds` defines how long to wait before performing the first probe. Default value for readiness probe is 2 seconds and for liveness probe is 20 seconds. You should set appropriate values for your container, if necessary, to ensure that the readiness and liveness probes don’t interfere with each other. Otherwise, the liveness probe might continuously restart the pod and the pod will never be marked as ready.
+
+More information about configuring liveness and readiness probes can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)
 
 
 ## Using the Chart to deploy your Application to Kubernetes
