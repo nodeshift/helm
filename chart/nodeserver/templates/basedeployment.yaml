@@ -1,5 +1,5 @@
 {{ if .Values.base.enabled }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{  .Chart.Name }}-basedeployment"
@@ -12,6 +12,10 @@ spec:
     rollingUpdate:
       maxUnavailable: 0
       maxSurge: 1
+  selector:
+    matchLabels:
+      app: "{{  .Chart.Name }}-selector"
+      version: "base"
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   template:
     metadata:
